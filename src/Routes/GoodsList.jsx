@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { Checkbox } from "antd";
+import { observable, action } from 'mobx';
+import { observer } from 'mobx-react';
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -55,54 +57,47 @@ const ResultText = styled.p`
   }
 `;
 
+@observer
 class GoodsList extends Component {
-  state = {
-    typeCheckedList: [],
-    typeIndeterminate: false,
-    typeCheckAll: false,
-    typePlainOptions: ["건축자금", "부동산 담보"],
-    statusCheckedList: [],
-    statusIndeterminate: false,
-    statusCheckAll: false,
-    statusPlainOptions: ["대기중", "모집중"]
+  @observable typeCheckedList = [];
+  @observable typeIndeterminate = false;
+  @observable typeCheckAll = false;
+  @observable typePlainOptions = ["건축자금", "부동산 담보"];
+  @observable statusCheckedList = [];
+  @observable statusIndeterminate = false;
+  @observable statusCheckAll = false;
+  @observable statusPlainOptions = ["대기중", "모집중"];
+
+  @action
+  onTypeChange = value => {
+      this.typeCheckedList = value;
+      this.typeIndeterminate =
+        !!value.length &&
+        value.length < this.typePlainOptions.length;
+      this.typeCheckAll =
+        value.length === this.typePlainOptions.length;
   };
 
-  onTypeChange = typeCheckedList => {
-    this.setState({
-      typeCheckedList,
-      typeIndeterminate:
-        !!typeCheckedList.length &&
-        typeCheckedList.length < this.state.typePlainOptions.length,
-      typeCheckAll:
-        typeCheckedList.length === this.state.typePlainOptions.length
-    });
-  };
-
+  @action
   onTypeCheckAllChange = e => {
-    this.setState({
-      typeCheckedList: e.target.checked ? this.state.typePlainOptions : [],
-      typeIndeterminate: false,
-      typeCheckAll: e.target.checked
-    });
+    this.typeCheckedList = e.target.checked ? this.typePlainOptions : [];
+    this.typeIndeterminate = false;
+    this.typeCheckAll = e.target.checked;
   };
 
-  onStatusChange = statusCheckedList => {
-    this.setState({
-      statusCheckedList,
-      statusIndeterminate:
-        !!statusCheckedList.length &&
-        statusCheckedList.length < this.state.statusPlainOptions.length,
-      statusCheckAll:
-        statusCheckedList.length === this.state.statusPlainOptions.length
-    });
+  @action
+  onStatusChange = value => {
+    this.statusCheckedList = value;
+    this.statusIndeterminate = !!value.length &&
+      value.length < this.statusPlainOptions.length;
+    this.statusCheckAll = value.length === this.statusPlainOptions.length;
   };
 
+  @action
   onStatusCheckAllChange = e => {
-    this.setState({
-      statusCheckedList: e.target.checked ? this.state.statusPlainOptions : [],
-      statusIndeterminate: false,
-      statusCheckAll: e.target.checked
-    });
+    this.statusCheckedList = e.target.checked ? this.statusPlainOptions : [];
+    this.statusIndeterminate = false;
+    this.statusCheckAll = e.target.checked;
   };
   render() {
     return (
@@ -112,32 +107,32 @@ class GoodsList extends Component {
             <li>
               <FilterTitle>상품유형</FilterTitle>
               <Checkbox
-                indeterminate={this.state.typeIndeterminate}
+                indeterminate={this.typeIndeterminate}
                 onChange={this.onTypeCheckAllChange}
-                checked={this.state.typeCheckAll}
+                checked={this.typeCheckAll}
               >
                 전체
               </Checkbox>
               <GrayLine />
               <CheckboxGroup
-                options={this.state.typePlainOptions}
-                value={this.state.typeCheckedList}
+                options={this.typePlainOptions}
+                value={this.typeCheckedList}
                 onChange={this.onTypeChange}
               />
             </li>
             <li>
               <FilterTitle>채권상태</FilterTitle>
               <Checkbox
-                indeterminate={this.state.statusIndeterminate}
+                indeterminate={this.statusIndeterminate}
                 onChange={this.onStatusCheckAllChange}
-                checked={this.state.statusCheckAll}
+                checked={this.statusCheckAll}
               >
                 전체
               </Checkbox>
               <GrayLine />
               <CheckboxGroup
-                options={this.state.statusPlainOptions}
-                value={this.state.statusCheckedList}
+                options={this.statusPlainOptions}
+                value={this.statusCheckedList}
                 onChange={this.onStatusChange}
               />
             </li>
