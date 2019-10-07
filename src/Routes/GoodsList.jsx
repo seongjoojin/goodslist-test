@@ -22,7 +22,7 @@ const FilterContainer = styled.ul`
 `;
 
 const ListContainer = styled.div`
-  width: 110px;
+  width: 1100px;
   margin: 60px auto;
 `;
 
@@ -34,12 +34,25 @@ const FilterTitle = styled.strong`
   width: 120px;
 `;
 
-const GreayLine = styled.span`
+const GrayLine = styled.span`
   display: inline-block;
   width: 1px;
   height: 16px;
   background-color: #e1e1e1;
   margin: 0 40px;
+`;
+
+const ResultText = styled.p`
+  margin-bottom: 24px;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #222;
+  span {
+    display: inline-block;
+    color: #3d6afe;
+  }
 `;
 
 class GoodsList extends Component {
@@ -105,7 +118,7 @@ class GoodsList extends Component {
               >
                 전체
               </Checkbox>
-              <GreayLine />
+              <GrayLine />
               <CheckboxGroup
                 options={this.state.typePlainOptions}
                 value={this.state.typeCheckedList}
@@ -121,7 +134,7 @@ class GoodsList extends Component {
               >
                 전체
               </Checkbox>
-              <GreayLine />
+              <GrayLine />
               <CheckboxGroup
                 options={this.state.statusPlainOptions}
                 value={this.state.statusCheckedList}
@@ -130,7 +143,9 @@ class GoodsList extends Component {
             </li>
           </FilterContainer>
         </FilterBackground>
-        <ListContainer></ListContainer>
+        <ListContainer>
+          <ResultText>총 <span>1,666</span>건의 상품이 검색되었습니다.</ResultText>
+        </ListContainer>
       </>
     );
   }
