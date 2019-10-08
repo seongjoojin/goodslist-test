@@ -44,16 +44,18 @@ const ResultText = styled.p`
 
 const GoodsListContainer = styled.ul`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 60px;
-  d > li {
+  > li {
     width: 350px;
   }
 `;
 
 @observer
 class GoodsList extends Component {
-  @observable goodsData = goodsListResult;
+  @observable goodsListData = goodsListResult.list;
+  @observable goodsTotal = goodsListResult.total;
   render() {
     return (
       <>
@@ -75,18 +77,14 @@ class GoodsList extends Component {
         </FilterBackground>
         <ListContainer>
           <ResultText>
-            총 <span>{this.goodsData.total}</span>건의 상품이 검색되었습니다.
+            총 <span>{this.goodsTotal}</span>건의 상품이 검색되었습니다.
           </ResultText>
           <GoodsListContainer>
-            <li>
-              <GoodsCard />
-            </li>
-            <li>
-              <GoodsCard />
-            </li>
-            <li>
-              <GoodsCard />
-            </li>
+            {this.goodsListData.map(goodsData => (
+              <li key={goodsData.id}>
+                <GoodsCard goodsData={goodsData} />
+              </li>
+            ))}
           </GoodsListContainer>
         </ListContainer>
       </>
