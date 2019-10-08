@@ -3,7 +3,9 @@ import styled from "styled-components";
 import { observable, action } from "mobx";
 import { observer } from "mobx-react";
 
-import FilterList from "../Components/FilterList";
+import FilterList from "../components/FilterList";
+import GoodsCard from "../components/GoodsCard";
+import goodsListResult from "../api/goodsListResult";
 
 const FilterBackground = styled.div`
   height: 200px;
@@ -40,8 +42,18 @@ const ResultText = styled.p`
   }
 `;
 
+const GoodsListContainer = styled.ul`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 60px;
+  d > li {
+    width: 350px;
+  }
+`;
+
 @observer
 class GoodsList extends Component {
+  @observable goodsData = goodsListResult;
   render() {
     return (
       <>
@@ -63,8 +75,19 @@ class GoodsList extends Component {
         </FilterBackground>
         <ListContainer>
           <ResultText>
-            총 <span>1,666</span>건의 상품이 검색되었습니다.
+            총 <span>{this.goodsData.total}</span>건의 상품이 검색되었습니다.
           </ResultText>
+          <GoodsListContainer>
+            <li>
+              <GoodsCard />
+            </li>
+            <li>
+              <GoodsCard />
+            </li>
+            <li>
+              <GoodsCard />
+            </li>
+          </GoodsListContainer>
         </ListContainer>
       </>
     );

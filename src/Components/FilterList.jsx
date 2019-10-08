@@ -42,6 +42,7 @@ class FilterList extends Component {
     this.indeterminate = false;
     this.checkAll = e.target.checked;
   };
+
   render() {
     const { title, plainOptions } = this.props;
     return (
