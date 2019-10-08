@@ -46,10 +46,25 @@ const GoodsListContainer = styled.ul`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-bottom: 60px;
+  margin-bottom: 36px;
   > li {
     width: 350px;
   }
+`;
+
+const MoreViewButton = styled.button`
+  display: block;
+  width: 350px;
+  height: 40px;
+  border-radius: 4px;
+  border: solid 1px #ccc;
+  background-color: #fff;
+  font-weight: bold;
+  line-height: 40px;
+  letter-spacing: normal;
+  text-align: center;
+  color: #666;
+  margin: 0 auto 60px;
 `;
 
 @observer
@@ -87,6 +102,7 @@ class GoodsList extends Component {
             ))}
           </GoodsListContainer>
         </ListContainer>
+        <MoreViewButton type="button">더보기 (1/83)</MoreViewButton>
       </>
     );
   }

@@ -121,10 +121,10 @@ const goodsListResult = {
             targetAmount: 100000000,
             contractType: '건축자금',
             grade: 'A1',
-            investAmount: 95,
+            investAmount: 95000000,
             url: 'https://cdn.terafunding.com/UploadedFiles/19-LN-3205/19-LN-3205_20190826170137449.png',
             soldOutSoon: 'TRUE',
-            currentRate: 95000000
+            currentRate: 95
         },
         {
             id: 10,
