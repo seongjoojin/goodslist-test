@@ -1,10 +1,8 @@
-import {
-    createGlobalStyle
-} from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
-import 'antd/dist/antd.css';
+import "antd/dist/antd.css";
 
-const GlobalStyles = createGlobalStyle `
+const GlobalStyles = createGlobalStyle`
     ${reset};
     a{
         text-decoration:none;
@@ -15,6 +13,10 @@ const GlobalStyles = createGlobalStyle `
         outline: none;
         border: none;
         cursor: pointer;
+        padding: 0;
+    }
+    button:disabled {
+        cursor: not-allowed;
     }
     ul, li {
         list-style: none;

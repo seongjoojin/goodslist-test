@@ -24,9 +24,9 @@ const GrayLine = styled.span`
 
 @observer
 class FilterList extends Component {
-  @observable checkedList = [];
+  @observable checkedList = this.props.plainOptions;
   @observable indeterminate = false;
-  @observable checkAll = false;
+  @observable checkAll = true;
 
   @action
   onChange = value => {
