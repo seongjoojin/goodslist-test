@@ -45,10 +45,15 @@ const ResultText = styled.p`
 const GoodsListContainer = styled.ul`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-bottom: 36px;
   > li {
     width: 350px;
+    margin-left: 25px;
+    :first-child,
+    :nth-child(3n + 1) {
+      margin: 0;
+    }
   }
 `;
 
@@ -69,8 +74,28 @@ const MoreViewButton = styled.button`
 
 @observer
 class GoodsList extends Component {
-  @observable goodsListData = goodsListResult.list;
+  @observable goodsTotalListData = goodsListResult.list;
+  @observable goodsListData = goodsListResult.list.slice(0, 5);
   @observable goodsTotal = goodsListResult.total;
+  @observable currentPage = 1;
+  @observable maxPage =
+    goodsListResult.total % 5
+      ? Math.ceil(goodsListResult.total / 5)
+      : goodsListResult.total / 5;
+
+  @action
+  onAddList = () => {
+    if (this.currentPage < this.maxPage) {
+      let currentPageNumber = this.currentPage + 1;
+      const sliceList = goodsListResult.list.slice(
+        (currentPageNumber - 1) * 5,
+        currentPageNumber * 5
+      );
+      this.goodsListData = this.goodsListData.concat(sliceList);
+      this.currentPage = currentPageNumber;
+    }
+  };
+
   render() {
     return (
       <>
@@ -102,7 +127,9 @@ class GoodsList extends Component {
             ))}
           </GoodsListContainer>
         </ListContainer>
-        <MoreViewButton type="button">더보기 (1/83)</MoreViewButton>
+        <MoreViewButton onClick={this.onAddList} type="button">
+          더보기 ({this.currentPage}/{this.maxPage})
+        </MoreViewButton>
       </>
     );
   }
