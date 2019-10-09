@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { observable, action } from "mobx";
-import { observer } from "mobx-react";
+import { observable, action, computed, reaction } from "mobx";
+import { observer, inject, disposeOnUnmount } from "mobx-react";
 
 import FilterList from "../components/FilterList";
 import GoodsCard from "../components/GoodsCard";
@@ -72,12 +72,18 @@ const MoreViewButton = styled.button`
   margin: 0 auto 60px;
 `;
 
+@inject("checklist")
 @observer
 class GoodsList extends Component {
-  @observable sortedListData = goodsListResult.list.sort(function(a,b) {
-    return a.currentRate > b.currentRate ? -1 : b.currentRate > a.currentRate ? 1 : 0;
+  @observable listData = goodsListResult.list.sort(function(a, b) {
+    return a.currentRate > b.currentRate
+      ? -1
+      : b.currentRate > a.currentRate
+      ? 1
+      : 0;
   });
-  @observable goodsListData = this.sortedListData.slice(0, 5);
+  @observable sortedListData = null;
+  @observable goodsListData = this.listData.slice(0, 5);
   @observable goodsTotal = goodsListResult.total;
   @observable currentPage = 1;
   @observable maxPage =
@@ -98,7 +104,86 @@ class GoodsList extends Component {
     }
   };
 
+  @computed get typedStatusFilterValue() {
+    if (
+      this.props.checklist.list.includes("부동산담보") ^
+      this.props.checklist.list.includes("건축자금")
+    ) {
+      return this.props.checklist.list.includes("부동산담보")
+        ? "부동산담보"
+        : this.props.checklist.list.includes("건축자금")
+        ? "건축자금"
+        : "";
+    } else {
+      return "";
+    }
+  }
+
+  @computed get contractTypeFilterValue() {
+    if (
+      this.props.checklist.list.includes("대기중") ^
+      this.props.checklist.list.includes("모집중")
+    ) {
+      return this.props.checklist.list.includes("대기중")
+        ? "대기중"
+        : this.props.checklist.list.includes("모집중")
+        ? "모집중"
+        : "";
+    } else {
+      return "";
+    }
+  }
+
+  @disposeOnUnmount
+  typedStatusFilter = reaction(
+    () => this.typedStatusFilterValue,
+    value => {
+      console.log(value !== "");
+      if (value !== "") {
+        this.sortedListData = this.listData.filter(item => item.typedStatus === value);
+        console.log(this.sortedListData)
+        // this.goodsListData = this.sortedListData.splice(
+        //   0,
+        //   5 * this.currentPage
+        // );
+      }
+    }
+  );
+
+  @disposeOnUnmount
+  contractTypeFilter = reaction(
+    () => this.contractTypeFilterValue,
+    value => {
+      console.log(value);
+      if (value !== "") {
+        this.sortedListData = this.listData.filter(
+          item => item.contractType === value
+        );
+        console.log(this.sortedListData)
+        // this.goodsListData = this.sortedListData.splice(
+        //   0,
+        //   5 * this.currentPage
+        // );
+      }
+    }
+  );
+
+  // componentDidMount() {
+  //   if (this.typedStatusFilterValue !== "") {
+  //     this.sortedListData = this.sortedListData.filter(
+  //       item => item.typedStatus === this.typedStatusFilterValue
+  //     );
+  //   }
+  //
+  //   if (this.contractTypeFilterValue !== "") {
+  //     this.sortedListData = this.sortedListData.filter(
+  //       item => item.contractType === this.contractTypeFilterValue
+  //     );
+  //   }
+  // }
+
   render() {
+    console.log(this.contractTypeFilterValue);
     return (
       <>
         <FilterBackground>
@@ -106,7 +191,7 @@ class GoodsList extends Component {
             <li>
               <FilterList
                 title={"상품유형"}
-                plainOptions={["건축자금", "부동산 담보"]}
+                plainOptions={["건축자금", "부동산담보"]}
               />
             </li>
             <li>

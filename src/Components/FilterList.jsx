@@ -52,6 +52,9 @@ class FilterList extends Component {
       [e.target.name]: e.target.checked
     };
     this.checkAll = !Object.values(this.checkboxes).includes(false);
+    e.target.checked
+      ? this.props.checklist.addItem(e.target.name)
+      : this.props.checklist.removeItem(e.target.name);
   };
 
   @action
@@ -60,6 +63,15 @@ class FilterList extends Component {
       this.checkboxes = { ...this.checkboxes, [item]: e.target.checked };
     });
     this.checkAll = e.target.checked;
+    e.target.checked
+      ? e.target.name.split(",").forEach(item => {
+          if (!this.props.checklist.list.includes(item)) {
+            this.props.checklist.addItem(item);
+          }
+        })
+      : e.target.name.split(",").forEach(item => {
+          this.props.checklist.removeItem(item);
+        });
   };
 
   render() {

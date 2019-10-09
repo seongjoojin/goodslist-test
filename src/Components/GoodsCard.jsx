@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { observable, action } from "mobx";
 import { observer } from "mobx-react";
 
 const Container = styled.div`
@@ -101,7 +100,7 @@ const InformationContainer = styled.div`
 `;
 
 const ContractTypeText = styled.p`
-  margin-bottom: 14px;
+  margin-bottom: 4px;
   width: 64px;
   height: 24px;
   border-radius: 5px;
@@ -116,7 +115,7 @@ const ContractTypeText = styled.p`
 `;
 
 const InformationBox = styled.ul`
-  margin-bottom: 11px;
+  margin-bottom: 4px;
   display: flex;
   align-items: center;
   > li {

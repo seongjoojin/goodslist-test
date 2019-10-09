@@ -56,7 +56,13 @@ const CheckboxContainer = styled.div`
 
 const Checkbox = ({ id, name, label, isSelected, onCheckboxChange }) => (
   <CheckboxContainer>
-    <input id={id} type="checkbox" checked={isSelected} name={name} onChange={onCheckboxChange} />
+    <input
+      id={id}
+      type="checkbox"
+      checked={isSelected}
+      name={name}
+      onChange={onCheckboxChange}
+    />
     <label htmlFor={id}>{label}</label>
   </CheckboxContainer>
 );
