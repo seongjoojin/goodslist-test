@@ -74,8 +74,10 @@ const MoreViewButton = styled.button`
 
 @observer
 class GoodsList extends Component {
-  @observable goodsTotalListData = goodsListResult.list;
-  @observable goodsListData = goodsListResult.list.slice(0, 5);
+  @observable sortedListData = goodsListResult.list.sort(function(a,b) {
+    return a.currentRate > b.currentRate ? -1 : b.currentRate > a.currentRate ? 1 : 0;
+  });
+  @observable goodsListData = this.sortedListData.slice(0, 5);
   @observable goodsTotal = goodsListResult.total;
   @observable currentPage = 1;
   @observable maxPage =
