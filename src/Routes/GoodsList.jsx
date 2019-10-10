@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { observable, action, computed, reaction } from "mobx";
-import { observer, inject, disposeOnUnmount } from "mobx-react";
+import { observer, inject } from "mobx-react";
 
 import FilterList from "../components/FilterList";
 import GoodsCard from "../components/GoodsCard";
-import goodsListResult from "../api/goodsListResult";
 
 const FilterBackground = styled.div`
   height: 200px;
@@ -72,149 +70,11 @@ const MoreViewButton = styled.button`
   margin: 0 auto 60px;
 `;
 
-@inject("checklist")
+@inject("goodsList")
 @observer
 class GoodsList extends Component {
-  @observable listData = goodsListResult.list.sort(function(a, b) {
-    return a.currentRate > b.currentRate
-      ? -1
-      : b.currentRate > a.currentRate
-      ? 1
-      : 0;
-  });
-  @observable sortedListData = null;
-  @observable goodsListData = this.listData.slice(0, 5);
-  @observable goodsTotal = goodsListResult.total;
-  @observable currentPage = 1;
-  @observable maxPage =
-    goodsListResult.total % 5
-      ? Math.ceil(goodsListResult.total / 5)
-      : goodsListResult.total / 5;
-
-  @action
-  onAddList = () => {
-    if (this.currentPage < this.maxPage) {
-      let currentPageNumber = this.currentPage + 1;
-      const sliceList = goodsListResult.list.slice(
-        (currentPageNumber - 1) * 5,
-        currentPageNumber * 5
-      );
-      this.goodsListData = this.goodsListData.concat(sliceList);
-      this.currentPage = currentPageNumber;
-    }
-  };
-
-  @computed get typedStatusFilterValue() {
-    if (
-      this.props.checklist.list.includes("대기중") ^
-      this.props.checklist.list.includes("모집중")
-    ) {
-      return this.props.checklist.list.includes("대기중")
-        ? "대기중"
-        : this.props.checklist.list.includes("모집중")
-        ? "모집중"
-        : "";
-    } else {
-      return "";
-    }
-  }
-
-  @computed get contractTypeFilterValue() {
-    if (
-      this.props.checklist.list.includes("부동산담보") ^
-      this.props.checklist.list.includes("건축자금")
-    ) {
-      return this.props.checklist.list.includes("부동산담보")
-        ? "부동산담보"
-        : this.props.checklist.list.includes("모집중")
-        ? "건축자금"
-        : "";
-    } else {
-      return "";
-    }
-  }
-
-  @disposeOnUnmount
-  typedStatusFilter = reaction(
-    () => this.typedStatusFilterValue,
-    value => {
-      if (value !== "" && this.contractTypeFilterValue === "") {
-        this.sortedListData = this.listData.filter(
-          item => item.typedStatus === value
-        );
-        this.goodsListData = this.sortedListData.splice(
-          0,
-          5 * this.currentPage
-        );
-      } else if (value !== "" && this.contractTypeFilterValue !== "") {
-        this.sortedListData = this.listData.filter(
-          item =>
-            item.typedStatus === value &&
-            item.contractType === this.contractTypeFilterValue
-        );
-        this.goodsListData = this.sortedListData.splice(
-          0,
-          5 * this.currentPage
-        );
-      } else if (value === "" && this.contractTypeFilterValue !== "") {
-        this.sortedListData = this.listData.filter(
-          item => item.contractType === this.contractTypeFilterValue
-        );
-        this.goodsListData = this.sortedListData.splice(
-          0,
-          5 * this.currentPage
-        );
-      } else {
-        this.sortedListData = this.listData;
-        this.goodsListData = this.sortedListData.splice(
-          0,
-          5 * this.currentPage
-        );
-      }
-    }
-  );
-
-  @disposeOnUnmount
-  contractTypeFilter = reaction(
-    () => this.contractTypeFilterValue,
-    value => {
-      if (value !== "" && this.typedStatusFilterValue === "") {
-        this.sortedListData = this.listData.filter(
-          item => item.contractType === value
-        );
-        this.goodsListData = this.sortedListData.splice(
-          0,
-          5 * this.currentPage
-        );
-      } else if (value !== "" && this.typedStatusFilterValue !== "") {
-        this.sortedListData = this.listData.filter(
-          item =>
-            item.contractType === value &&
-            item.typedStatus === this.typedStatusFilterValue
-        );
-        this.goodsListData = this.sortedListData.splice(
-          0,
-          5 * this.currentPage
-        );
-      } else if (value === "" && this.typedStatusFilterValue !== "") {
-        this.sortedListData = this.listData.filter(
-          item => item.typedStatus === this.typedStatusFilterValue
-        );
-        this.goodsListData = this.sortedListData.splice(
-          0,
-          5 * this.currentPage
-        );
-      } else {
-        this.sortedListData = this.listData;
-        this.goodsListData = this.sortedListData.splice(
-          0,
-          5 * this.currentPage
-        );
-      }
-    }
-  );
-
   render() {
+    const { goodsList } = this.props;
     return (
       <>
         <FilterBackground>
@@ -235,19 +95,21 @@ class GoodsList extends Component {
         </FilterBackground>
         <ListContainer>
           <ResultText>
-            총 <span>{this.goodsTotal}</span>건의 상품이 검색되었습니다.
+            총 <span>{goodsList.goodsTotal}</span>건의 상품이 검색되었습니다.
           </ResultText>
           <GoodsListContainer>
-            {this.goodsListData.map(goodsData => (
+            {goodsList.goodsListData.map(goodsData => (
               <li key={goodsData.id}>
                 <GoodsCard goodsData={goodsData} />
               </li>
             ))}
           </GoodsListContainer>
         </ListContainer>
-        <MoreViewButton onClick={this.onAddList} type="button">
-          더보기 ({this.currentPage}/{this.maxPage})
-        </MoreViewButton>
+        {goodsList.currentPage !== goodsList.maxPage && (
+          <MoreViewButton onClick={goodsList.onAddList} type="button">
+            더보기 ({goodsList.currentPage}/{goodsList.maxPage})
+          </MoreViewButton>
+        )}
       </>
     );
   }

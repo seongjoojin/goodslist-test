@@ -33,7 +33,7 @@ const CheckboxGroup = styled.ul`
   }
 `;
 
-@inject("checklist")
+@inject("goodsList")
 @observer
 class FilterList extends Component {
   @observable checkboxes = this.props.plainOptions.reduce(
@@ -53,8 +53,8 @@ class FilterList extends Component {
     };
     this.checkAll = !Object.values(this.checkboxes).includes(false);
     e.target.checked
-      ? this.props.checklist.addItem(e.target.name)
-      : this.props.checklist.removeItem(e.target.name);
+      ? this.props.goodsList.checkedListAddItem(e.target.name)
+      : this.props.goodsList.checkedListRemoveItem(e.target.name);
   };
 
   @action
@@ -65,12 +65,12 @@ class FilterList extends Component {
     this.checkAll = e.target.checked;
     e.target.checked
       ? e.target.name.split(",").forEach(item => {
-          if (!this.props.checklist.list.includes(item)) {
-            this.props.checklist.addItem(item);
+          if (!this.props.goodsList.checkedList.includes(item)) {
+            this.props.goodsList.checkedListAddItem(item);
           }
         })
       : e.target.name.split(",").forEach(item => {
-          this.props.checklist.removeItem(item);
+          this.props.goodsList.checkedListRemoveItem(item);
         });
   };
 
