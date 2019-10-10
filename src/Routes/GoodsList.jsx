@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { observer, inject } from "mobx-react";
 
-import FilterList from "../components/FilterList";
-import GoodsCard from "../components/GoodsCard";
+import FilterList from "../Components/FilterList";
+import GoodsCard from "../Components/GoodsCard";
 
 const FilterBackground = styled.div`
   height: 200px;

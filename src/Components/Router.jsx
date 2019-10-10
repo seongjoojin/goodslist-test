@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 
-import GoodsList from "../routes/GoodsList";
+import GoodsList from "../Routes/GoodsList";
 
 class Router extends Component {
   render() {

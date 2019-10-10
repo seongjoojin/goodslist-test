@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "mobx-react";
 
-import App from "./components/App";
+import App from "./Components/App";
 import * as serviceWorker from "./serviceWorker";
 import GoodsListStore from "./stores/goodsList";
 
