@@ -106,21 +106,6 @@ class GoodsList extends Component {
 
   @computed get typedStatusFilterValue() {
     if (
-      this.props.checklist.list.includes("부동산담보") ^
-      this.props.checklist.list.includes("건축자금")
-    ) {
-      return this.props.checklist.list.includes("부동산담보")
-        ? "부동산담보"
-        : this.props.checklist.list.includes("건축자금")
-        ? "건축자금"
-        : "";
-    } else {
-      return "";
-    }
-  }
-
-  @computed get contractTypeFilterValue() {
-    if (
       this.props.checklist.list.includes("대기중") ^
       this.props.checklist.list.includes("모집중")
     ) {
@@ -134,18 +119,57 @@ class GoodsList extends Component {
     }
   }
 
+  @computed get contractTypeFilterValue() {
+    if (
+      this.props.checklist.list.includes("부동산담보") ^
+      this.props.checklist.list.includes("건축자금")
+    ) {
+      return this.props.checklist.list.includes("부동산담보")
+        ? "부동산담보"
+        : this.props.checklist.list.includes("모집중")
+        ? "건축자금"
+        : "";
+    } else {
+      return "";
+    }
+  }
+
   @disposeOnUnmount
   typedStatusFilter = reaction(
     () => this.typedStatusFilterValue,
     value => {
-      console.log(value !== "");
-      if (value !== "") {
-        this.sortedListData = this.listData.filter(item => item.typedStatus === value);
-        console.log(this.sortedListData)
-        // this.goodsListData = this.sortedListData.splice(
-        //   0,
-        //   5 * this.currentPage
-        // );
+      if (value !== "" && this.contractTypeFilterValue === "") {
+        this.sortedListData = this.listData.filter(
+          item => item.typedStatus === value
+        );
+        this.goodsListData = this.sortedListData.splice(
+          0,
+          5 * this.currentPage
+        );
+      } else if (value !== "" && this.contractTypeFilterValue !== "") {
+        this.sortedListData = this.listData.filter(
+          item =>
+            item.typedStatus === value &&
+            item.contractType === this.contractTypeFilterValue
+        );
+        this.goodsListData = this.sortedListData.splice(
+          0,
+          5 * this.currentPage
+        );
+      } else if (value === "" && this.contractTypeFilterValue !== "") {
+        this.sortedListData = this.listData.filter(
+          item => item.contractType === this.contractTypeFilterValue
+        );
+        this.goodsListData = this.sortedListData.splice(
+          0,
+          5 * this.currentPage
+        );
+      } else {
+        this.sortedListData = this.listData;
+        this.goodsListData = this.sortedListData.splice(
+          0,
+          5 * this.currentPage
+        );
       }
     }
   );
@@ -154,36 +178,43 @@ class GoodsList extends Component {
   contractTypeFilter = reaction(
     () => this.contractTypeFilterValue,
     value => {
-      console.log(value);
-      if (value !== "") {
+      if (value !== "" && this.typedStatusFilterValue === "") {
         this.sortedListData = this.listData.filter(
           item => item.contractType === value
         );
-        console.log(this.sortedListData)
-        // this.goodsListData = this.sortedListData.splice(
-        //   0,
-        //   5 * this.currentPage
-        // );
+        this.goodsListData = this.sortedListData.splice(
+          0,
+          5 * this.currentPage
+        );
+      } else if (value !== "" && this.typedStatusFilterValue !== "") {
+        this.sortedListData = this.listData.filter(
+          item =>
+            item.contractType === value &&
+            item.typedStatus === this.typedStatusFilterValue
+        );
+        this.goodsListData = this.sortedListData.splice(
+          0,
+          5 * this.currentPage
+        );
+      } else if (value === "" && this.typedStatusFilterValue !== "") {
+        this.sortedListData = this.listData.filter(
+          item => item.typedStatus === this.typedStatusFilterValue
+        );
+        this.goodsListData = this.sortedListData.splice(
+          0,
+          5 * this.currentPage
+        );
+      } else {
+        this.sortedListData = this.listData;
+        this.goodsListData = this.sortedListData.splice(
+          0,
+          5 * this.currentPage
+        );
       }
     }
   );
 
-  // componentDidMount() {
-  //   if (this.typedStatusFilterValue !== "") {
-  //     this.sortedListData = this.sortedListData.filter(
-  //       item => item.typedStatus === this.typedStatusFilterValue
-  //     );
-  //   }
-  //
-  //   if (this.contractTypeFilterValue !== "") {
-  //     this.sortedListData = this.sortedListData.filter(
-  //       item => item.contractType === this.contractTypeFilterValue
-  //     );
-  //   }
-  // }
-
   render() {
-    console.log(this.contractTypeFilterValue);
     return (
       <>
         <FilterBackground>
