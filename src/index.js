@@ -4,12 +4,12 @@ import { Provider } from "mobx-react";
 
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
-import CheckListStore from "./stores/checkList";
+import GoodsListStore from "./stores/goodsList";
 
-const checklist = new CheckListStore();
+const goodsList = new GoodsListStore();
 
 ReactDOM.render(
-  <Provider checklist={checklist}>
+  <Provider goodsList={goodsList}>
     <App />
   </Provider>,
   document.getElementById("root")
